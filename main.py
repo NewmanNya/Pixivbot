@@ -43,13 +43,22 @@ if __name__ == '__main__':
             if filename.endswith(".png"):
                 all.append(filename)
     print (all)
+
+    flag_rebot = 0
     api = ApiInit()
     for i in all:
         try:
+            if flag_rebot :
+                api = ApiInit()
+                flag_rebot = 0
             TweetFunction(api,i,"See more cute pics @BotTamako\nBot collects pics from Pixiv daily")
-            time.sleep(3600*2)
+            os.remove(i)
+            print("remove "+ i)
+            time.sleep(30 * 2)
         except:
+            print(Exception)
+            time.sleep(3600 * 2)
+            flag_rebot = 1
+            print("rebot")
+            api = ApiInit()
             api.update_status(status="@Neko__Nya__, HELP ME~")
-        break
-
-    # TweetCmd(api,20,30,600)
