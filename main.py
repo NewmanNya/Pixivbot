@@ -80,16 +80,20 @@ if __name__ == '__main__':
             if flag_reboot :
                 api = ApiInit()
                 flag_reboot = 0
-            TweetFunction(api,i,"See more cute pics @BotTamako\nBot collects pics from Pixiv daily")
+            if os.path.getsize(i)>1000*3000:
+                os.remove(i)
+                continue
+            else:
+                TweetFunction(api,i,"See more cute pics @BotTamako\nBot collects pics from Pixiv daily")
             os.remove(i)
             print("remove "+ i)
             time.sleep(30 * 2)
 
         except Exception as e:
-            repr(e)
+            print(repr(e))
             print("ERROR")
             time.sleep(30 * 2)
             flag_reboot = 1
             print("reboot")
             api = ApiInit()
-            api.update_status(status="@Neko__Nya__, HELP ME~")
+            api.update_status(status="@Neko__Nya__, HELP ME~, Error is "+repr(e))
