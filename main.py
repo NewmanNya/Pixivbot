@@ -33,32 +33,63 @@ def TweetCmd(api,gap):
         TweetFunction(api, PicAddress="./MARKDONE",PicName= PicName, Content=Content)
         time.sleep(gap)
 
-if __name__ == '__main__':
+def Rename():
+    new_name = []
+    i  = 0
+    for fpathe, dirs, fs in os.walk("./"):
+        for f in fs:
+            if f.endswith(".jpg"):
+                i = i + 1
+                raw_filename = fpathe + '/' + f
+                new_filename = fpathe + '/' + str(i) +".jpg"
+                os.rename(raw_filename,new_filename)
+                new_name.append(new_filename)
+
+            if f.endswith(".png"):
+                i = i + 1
+                raw_filename = fpathe + '/' + f
+                new_filename = fpathe + '/' + str(i) + ".png"
+                os.rename(raw_filename, new_filename)
+                new_name.append(new_filename)
+    return new_name
+
+def get_pic_list():
     all = []
     for fpathe, dirs, fs in os.walk("./"):
         for f in fs:
-            filename = fpathe+'/'+f
+            filename = fpathe + '/' + f
             if filename.endswith(".jpg"):
                 all.append(filename)
             if filename.endswith(".png"):
                 all.append(filename)
-    print (all)
+    print(all)
+    return all
 
-    flag_rebot = 0
+if __name__ == '__main__':
+    try:
+        print(Rename())
+    except Exception as e:
+        repr(e)
+
+    pic_list = get_pic_list()
+
+    flag_reboot = 0
     api = ApiInit()
-    for i in all:
+    for i in pic_list:
         try:
-            if flag_rebot :
+            if flag_reboot :
                 api = ApiInit()
-                flag_rebot = 0
+                flag_reboot = 0
             TweetFunction(api,i,"See more cute pics @BotTamako\nBot collects pics from Pixiv daily")
             os.remove(i)
             print("remove "+ i)
             time.sleep(30 * 2)
-        except:
-            print(Exception)
-            time.sleep(3600 * 2)
-            flag_rebot = 1
-            print("rebot")
+
+        except Exception as e:
+            repr(e)
+            print("ERROR")
+            time.sleep(30 * 2)
+            flag_reboot = 1
+            print("reboot")
             api = ApiInit()
             api.update_status(status="@Neko__Nya__, HELP ME~")
